@@ -12,13 +12,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.entity.Livro;
 import app.service.LivroService;
-import entity.Livro;
 
 @RestController
-@RequestMapping("/api/biblioteca")
+@RequestMapping("/api/livro")
 public class LivroController {
 	
 	
@@ -76,5 +77,16 @@ public class LivroController {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST );
 		}
 	}
+	
+	@GetMapping("/findByAnosEntre")
+	public ResponseEntity<List<Livro>> findByAnosEntre(@RequestParam int ano1, @RequestParam int ano2) {
+		try {
+			List<Livro> lista = this.livroService.findByAnosEntre(ano1, ano2);
+			return new ResponseEntity<>(lista, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST );
+		}
+	}
+	
 	
 }

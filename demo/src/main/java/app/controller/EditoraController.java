@@ -14,17 +14,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.entity.Editora;
 import app.service.EditoraService;
-import entity.Editora;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController
-@RequestMapping("/api/biblioteca")
+@RequestMapping("/api/editora")
 public class EditoraController {
 	@Autowired
 	private EditoraService editoraService;
 	
 
-	@PostMapping("/saveEdit")
+	@PostMapping("/save")
 	public ResponseEntity<String> save(@RequestBody Editora editora){
 		try {
 			String mensagem = this.editoraService.save(editora);
@@ -34,7 +36,7 @@ public class EditoraController {
 		}
 	}
 	
-	@PutMapping("/updateEdit/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<String> update(@RequestBody Editora editora, @PathVariable long id){
 		try {
 			String mensagem = this.editoraService.update(editora, id);
@@ -44,7 +46,7 @@ public class EditoraController {
 		}
 	}
 
-	@GetMapping("/findByIdEdit/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Editora> findById(@PathVariable long id){
 		try {
 			Editora editora = this.editoraService.findById(id);
@@ -54,7 +56,7 @@ public class EditoraController {
 		}
 	}
 	
-	@GetMapping("/findAllEdit")
+	@GetMapping("/findAll")
 	public ResponseEntity<List<Editora>> findAll(){
 		try {
 			List<Editora> lista = this.editoraService.findAll();
@@ -64,7 +66,7 @@ public class EditoraController {
 		}
 	}
 	
-	@DeleteMapping("/deleteEdit/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> delete(@PathVariable long id){
 		try {
 			String mensagem = this.editoraService.delete(id);
@@ -73,6 +75,17 @@ public class EditoraController {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST );
 		}
 	}
+	
+	@GetMapping("/findByEndereco")
+	public ResponseEntity<List<Editora>> findByEndereco(@RequestParam String endereco) {
+		try {
+			List<Editora> lista = this.editoraService.findByEndereco(endereco);
+			return new ResponseEntity<>(lista, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST );
+		}
+	}
+	
 	
 
 }

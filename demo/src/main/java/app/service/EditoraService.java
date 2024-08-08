@@ -1,54 +1,57 @@
 package app.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import entity.Editora;
+import app.entity.Editora;
+import app.repository.EditoraRepository;
 
 @Service
 public class EditoraService {
 
+	@Autowired
+	EditoraRepository editoraRepository;
+
 	public String save(Editora editora) {
-		return "Editora cadastrada com sucesso";
+		if (editora.getLivros() != null) {
+			for (int i = 0; i < editora.getLivros().size(); i++) {
+				editora.getLivros().get(i).setEditora(editora);
+			}
+		}
+		this.editoraRepository.save(editora);
+		return "Editora cadastrada com sucesso!";
 	}
 
 	public String update(Editora editora, long id) {
-		return "Atualizado com sucesso";
+		editora.setId(id);
+		this.editoraRepository.save(editora);
+		return "Editora atualizada com sucesso!";
 	}
 
 	public Editora findById(long id) {
 
-		List<Editora> listaTemp = this.findAll();
-
-		for (int i = 0; i < listaTemp.size(); i++) {
-			if (listaTemp.get(i).getId() == id) {
-				return listaTemp.get(i);
-			}
-		}
-
-		return null;
+		Optional<Editora> optional = this.editoraRepository.findById(id);
+		if (optional.isPresent()) {
+			return optional.get();
+		} else
+			return null;
 
 	}
 
 	public List<Editora> findAll() {
-
-		List<Editora> lista = new ArrayList<>();
-		lista.add(new Editora(1, "Editora 1", "Rua 1"));
-
-		return lista;
+		return this.editoraRepository.findAll();
 	}
 
 	public String delete(long id) {
 
-		List<Editora> listaTemp = this.findAll();
-
-		for (int i = 0; i < listaTemp.size(); i++) {
-			if (listaTemp.get(i).getId() == id) {
-				return listaTemp.get(i).getEditora() + " deletado com sucesso";
-			}
-		}
-		return "Editora não encontrado";
+		this.editoraRepository.deleteById(id);
+		return "Editora deletada com sucesso!";
+	}
+	
+	public List<Editora> findByEndereco(String endereco){
+		return this.editoraRepository.findByEndereco(endereco);
 	}
 }

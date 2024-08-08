@@ -1,56 +1,53 @@
 package app.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import entity.Biblioteca;
+import app.entity.Biblioteca;
+import app.repository.BibliotecaRepository;
 
 @Service
 public class BibliotecaService {
+	
+	@Autowired
+	private BibliotecaRepository bibliotecaRepository;
 
 
-	public String save(Biblioteca editora) {
-		return "Biblioteca cadastrada com sucesso";
+	public String save(Biblioteca biblioteca) {
+		this.bibliotecaRepository.save(biblioteca);
+		return "Biblioteca cadastrada com sucesso!";
 	}
 
-	public String update(Biblioteca editora, long id) {
-		return "Atualizado com sucesso";
+	public String update(Biblioteca biblioteca, long id) {
+		biblioteca.setId(id);
+		this.bibliotecaRepository.save(biblioteca);
+		return "Biblioteca atualizada com sucesso!";
 	}
 
 	public Biblioteca findById(long id) {
 
-		List<Biblioteca> listaTemp = this.findAll();
-
-		for (int i = 0; i < listaTemp.size(); i++) {
-			if (listaTemp.get(i).getId() == id) {
-				return listaTemp.get(i);
-			}
-		}
-
-		return null;
+		Optional<Biblioteca> optional = this.bibliotecaRepository.findById(id);
+		if(optional.isPresent()) {
+			return optional.get();
+		} else return null;
 
 	}
 
 	public List<Biblioteca> findAll() {
-
-		List<Biblioteca> lista = new ArrayList<>();
-		lista.add(new Biblioteca(1, "Rua 5", "45 99999-9999"));
-		lista.add(new Biblioteca(2, "Rua 7", "45 88888-8888"));
-
-		return lista;
+		return this.bibliotecaRepository.findAll();
 	}
 
 	public String delete(long id) {
-
-		List<Biblioteca> listaTemp = this.findAll();
-
-		for (int i = 0; i < listaTemp.size(); i++) {
-			if (listaTemp.get(i).getId() == id) {
-				return "Deletado com sucesso";
-			}
-		}
-		return "Biblioteca não encontrado";
+		
+		this.bibliotecaRepository.deleteById(id);
+		
+		return "Biblioteca deletada com sucesso";
+	}
+	
+	public List<Biblioteca> findByNomeStartsWith(String nome){
+		return this.bibliotecaRepository.findByNomeStartsWith(nome);
 	}
 }

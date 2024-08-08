@@ -12,10 +12,11 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import app.entity.Biblioteca;
 import app.service.BibliotecaService;
-import entity.Biblioteca;
 
 @RestController
 @RequestMapping("/api/biblioteca")
@@ -25,7 +26,7 @@ public class BibliotecaController {
 	private BibliotecaService bibliotecaService;
 	
 
-	@PostMapping("/saveBiblioteca")
+	@PostMapping("/save")
 	public ResponseEntity<String> save(@RequestBody Biblioteca biblioteca){
 		try {
 			String mensagem = this.bibliotecaService.save(biblioteca);
@@ -35,7 +36,7 @@ public class BibliotecaController {
 		}
 	}
 	
-	@PutMapping("/updateBiblioteca/{id}")
+	@PutMapping("/update/{id}")
 	public ResponseEntity<String> update(@RequestBody Biblioteca biblioteca, @PathVariable long id){
 		try {
 			String mensagem = this.bibliotecaService.update(biblioteca, id);
@@ -45,7 +46,7 @@ public class BibliotecaController {
 		}
 	}
 
-	@GetMapping("/findByIdBiblioteca/{id}")
+	@GetMapping("/findById/{id}")
 	public ResponseEntity<Biblioteca> findById(@PathVariable long id){
 		try {
 			Biblioteca biblioteca = this.bibliotecaService.findById(id);
@@ -55,7 +56,7 @@ public class BibliotecaController {
 		}
 	}
 	
-	@GetMapping("/findAllBiblioteca")
+	@GetMapping("/findAll")
 	public ResponseEntity<List<Biblioteca>> findAll(){
 		try {
 			List<Biblioteca> lista = this.bibliotecaService.findAll();
@@ -65,11 +66,21 @@ public class BibliotecaController {
 		}
 	}
 	
-	@DeleteMapping("/deleteBiblioteca/{id}")
+	@DeleteMapping("/delete/{id}")
 	public ResponseEntity<String> delete(@PathVariable long id){
 		try {
 			String mensagem = this.bibliotecaService.delete(id);
 			return new ResponseEntity<>(mensagem, HttpStatus.OK);
+		} catch (Exception e) {
+			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST );
+		}
+	}
+	
+	@GetMapping("/findByNomeStartsWith")
+	public ResponseEntity<List<Biblioteca>> findByNomeStartsWith(@RequestParam String nome){
+		try {
+			List<Biblioteca> lista = this.bibliotecaService.findByNomeStartsWith(nome);
+			return new ResponseEntity<>(lista, HttpStatus.OK);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.BAD_REQUEST );
 		}

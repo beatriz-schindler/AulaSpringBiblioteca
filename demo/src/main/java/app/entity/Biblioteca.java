@@ -1,8 +1,17 @@
-package entity;
+package app.entity;
 
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+
+@Entity
 public class Biblioteca {
 
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long id;
+	private String nome;
 	private String endereco;
 	private String telefone;
 	
@@ -19,6 +28,14 @@ public class Biblioteca {
 	}
 	
 	
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
 	public long getId() {
 		return id;
 	}
